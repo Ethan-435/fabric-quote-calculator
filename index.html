@@ -14,7 +14,6 @@
     --text-tertiary: #9b8b73;
     --border: #e3d9c8;
     --accent: #3d5a80;
-    --accent-hover: #2c4466;
     --accent-light: #e8eff6;
     --highlight: #c17a3e;
     --highlight-light: #fdf3e7;
@@ -36,7 +35,6 @@
     color: var(--text);
     background: var(--bg);
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
@@ -52,12 +50,6 @@
     padding: 20px 0 8px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-  }
-  .header-left {
-    display: flex;
-    align-items: center;
     gap: 12px;
   }
   .header-icon {
@@ -70,39 +62,12 @@
   .header-title {
     font-size: 1.25rem;
     font-weight: 700;
-    letter-spacing: -0.01em;
     color: var(--text);
   }
   .header-sub {
     font-size: 0.8rem;
     color: var(--text-tertiary);
     margin-top: 2px;
-  }
-
-  .unit-toggle {
-    display: flex;
-    background: var(--surface-alt);
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    overflow: hidden;
-  }
-  .unit-toggle button {
-    padding: 6px 12px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    font-family: var(--font);
-    border: none;
-    background: transparent;
-    color: var(--text-tertiary);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
-  }
-  .unit-toggle button.active {
-    background: var(--accent);
-    color: #fff;
-    border-radius: 18px;
-    box-shadow: 0 1px 3px rgba(61,90,128,0.3);
   }
 
   .section {
@@ -138,7 +103,7 @@
     margin-bottom: 10px;
   }
   .form-row:last-child { margin-bottom: 0; }
-  .form-group { flex: 1; min-width: 120px; }
+  .form-group { flex: 1; min-width: 100px; }
 
   .form-label {
     display: block;
@@ -153,8 +118,7 @@
     font-size: 0.72rem;
   }
 
-  input[type="number"],
-  input[type="text"] {
+  input[type="number"] {
     width: 100%;
     padding: 10px 12px;
     font-size: 0.92rem;
@@ -174,6 +138,18 @@
   }
   input::placeholder { color: var(--text-tertiary); }
 
+  .meter-price-display {
+    margin-top: 10px;
+    padding: 10px 14px;
+    background: var(--accent-light);
+    border-radius: var(--radius-sm);
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    display: none;
+  }
+  .meter-price-display.visible { display: block; }
+
   .process-list { display: flex; flex-direction: column; gap: 8px; }
   .process-item {
     display: flex;
@@ -183,14 +159,13 @@
     background: var(--surface-alt);
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
-    transition: border-color 0.15s ease;
   }
-  .process-item:hover { border-color: var(--accent); }
   .process-item .proc-num {
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--text-tertiary);
-    min-width: 20px;
+    white-space: nowrap;
+    min-width: 36px;
   }
   .process-item input {
     flex: 1;
@@ -200,6 +175,7 @@
     border-radius: var(--radius-sm);
     background: #fff;
     min-width: 0;
+    font-family: var(--font);
   }
   .process-item input:focus {
     border-color: var(--accent);
@@ -234,10 +210,7 @@
     transition: all 0.15s ease;
     margin-top: 8px;
   }
-  .btn-add:hover {
-    border-color: var(--accent);
-    background: var(--accent-light);
-  }
+  .btn-add:hover { border-color: var(--accent); background: var(--accent-light); }
   .btn-add:active { transform: scale(0.97); }
 
   .result-section {
@@ -263,13 +236,14 @@
     font-size: 2rem;
     font-weight: 800;
     line-height: 1.15;
-    letter-spacing: -0.02em;
     margin-top: 2px;
   }
-  .result-header-price .unit {
+  .result-header-price .tax-line {
     font-size: 0.85rem;
     font-weight: 500;
     opacity: 0.8;
+    margin-top: 4px;
+    display: block;
   }
 
   .result-breakdown { padding: 14px 18px; }
@@ -291,6 +265,7 @@
   .breakdown-label .dot {
     width: 6px; height: 6px;
     border-radius: 50%;
+    flex-shrink: 0;
   }
   .breakdown-value {
     font-weight: 600;
@@ -308,6 +283,19 @@
     color: var(--highlight);
     font-size: 0.95rem;
     font-weight: 700;
+  }
+  .breakdown-row.final {
+    margin: 0 -18px;
+    padding: 12px 18px;
+    background: var(--accent-light);
+    border-bottom: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+  }
+  .breakdown-row.final .breakdown-value {
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: 800;
   }
 
   .empty-hint {
@@ -327,47 +315,52 @@
     body { padding: 10px; }
     .section { padding: 14px; }
     .form-row { gap: 8px; }
-    input[type="number"], input[type="text"] { padding: 9px 10px; font-size: 0.85rem; }
-    .header { flex-wrap: wrap; }
+    input[type="number"] { padding: 9px 10px; font-size: 0.85rem; }
   }
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="header-left">
-    <div class="header-icon">甯?/div>
-    <div>
-      <div class="header-title">闈㈡枡鎶ヤ环璁＄畻鍣?/div>
-      <div class="header-sub">濉叆鍙傛暟锛屽疄鏃惰绠楅攢鍞环</div>
-    </div>
-  </div>
-  <div class="unit-toggle" id="unitToggle">
-    <button data-unit="鍏?绫?>鍏?绫?/button>
-    <button data-unit="鍏?鍏枻" class="active">鍏?鍏枻</button>
+  <div class="header-icon">甯?/div>
+  <div>
+    <div class="header-title">闈㈡枡鎶ヤ环璁＄畻鍣?/div>
+    <div class="header-sub">杈撳叆鍏枻浠锋牸鍙婅鏍硷紝鑷姩鎹㈢畻骞惰绠楁姤浠?/div>
   </div>
 </div>
 
 <div class="section">
-  <div class="section-title">鍩虹鍙傛暟</div>
+  <div class="section-title">鍧竷鍙傛暟</div>
   <div class="form-row">
     <div class="form-group">
-      <label class="form-label">鍧竷浠锋牸 <span class="unit" data-unit-label>鍏?鍏枻</span></label>
-      <input type="number" id="fabricPrice" placeholder="渚嬶細12.50" step="0.01" min="0" autofocus>
+      <label class="form-label">鍧竷鍏枻浠?<span class="unit">鍏?鍏枻</span></label>
+      <input type="number" id="fabricPricePerKg" placeholder="渚嬶細50" step="0.01" min="0" autofocus>
     </div>
     <div class="form-group">
-      <label class="form-label">鏌撴暣鎹熻€楃巼 <span class="unit">%</span></label>
-      <input type="number" id="lossRate" placeholder="渚嬶細5" step="0.1" min="0">
+      <label class="form-label">闂ㄥ箙 <span class="unit">绫?/span></label>
+      <input type="number" id="fabricWidth" placeholder="渚嬶細1.5" step="0.01" min="0">
     </div>
   </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label">鍏嬮噸 <span class="unit">g/m虏</span></label>
+      <input type="number" id="fabricWeight" placeholder="渚嬶細200" step="1" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">鎹熻€楃巼 <span class="unit">%</span></label>
+      <input type="number" id="lossRate" placeholder="渚嬶細5" step="0.1" min="0" max="100">
+    </div>
+  </div>
+  <div class="meter-price-display" id="meterPriceDisplay">
+    鎹㈢畻绫充环锛?strong id="meterPriceValue">鈥?/strong> 鍏?绫?  </div>
 </div>
 
 <div class="section">
-  <div class="section-title">鏌撴暣鍔犲伐璐?/div>
+  <div class="section-title">鏌撴暣鍔犲伐璐?<span class="unit">鍏?绫?/span></div>
   <div class="process-list" id="processList">
     <div class="process-item">
       <span class="proc-num">宸ュ簭1</span>
-      <input type="number" class="proc-price" placeholder="鍏?鍏枻" step="0.01" min="0" data-unit-placeholder>
+      <input type="number" class="proc-price" placeholder="鍏?绫? step="0.01" min="0">
       <button class="btn-remove" title="鍒犻櫎" onclick="removeProcess(this)">&times;</button>
     </div>
   </div>
@@ -380,12 +373,22 @@
   <div class="section-title">璐圭敤涓庡埄娑?/div>
   <div class="form-row">
     <div class="form-group">
-      <label class="form-label">杩愯惀绠＄悊璐?<span class="unit" data-unit-label>鍏?鍏枻</span></label>
+      <label class="form-label">杩愯惀绠＄悊璐?<span class="unit">鍏?绫?/span></label>
       <input type="number" id="managementFee" value="0.95" step="0.01" min="0">
     </div>
     <div class="form-group">
-      <label class="form-label">杩愯垂 <span class="unit" data-unit-label>鍏?鍏枻</span></label>
+      <label class="form-label">杩愯垂 <span class="unit">鍏?绫?/span></label>
       <input type="number" id="shippingFee" placeholder="渚嬶細1.50" step="0.01" min="0">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label class="form-label">鍏朵粬璐圭敤 <span class="unit">鍏?绫?/span></label>
+      <input type="number" id="otherFee" placeholder="渚嬶細0.50" step="0.01" min="0">
+    </div>
+    <div class="form-group">
+      <label class="form-label">鍒╂鼎鐜?<span class="unit">%</span></label>
+      <input type="number" id="profitRate" placeholder="渚嬶細8" step="0.1" min="0" max="100">
     </div>
   </div>
   <div class="form-row">
@@ -393,61 +396,42 @@
       <label class="form-label">绋庣偣绯绘暟</label>
       <input type="number" id="taxRate" value="1.06" step="0.001" min="1">
     </div>
-    <div class="form-group">
-      <label class="form-label">鍒╂鼎鐜?<span class="unit">%</span></label>
-      <input type="number" id="profitRate" placeholder="渚嬶細8" step="0.1" min="0">
-    </div>
+    <div class="form-group"></div>
   </div>
 </div>
 
 <div class="result-section">
   <div class="result-header">
-    <div class="result-header-label">鏈€缁堥攢鍞环</div>
-    <div class="result-header-price" id="finalPrice">鈥?<span class="unit">鍏?鍏枻</span></div>
+    <div class="result-header-label">涓嶅惈绋庨攢鍞环</div>
+    <div class="result-header-price" id="finalPriceNoTax">鈥?鍏?绫?/div>
+    <div class="tax-line" id="finalPriceWithTax">鍚◣浠凤細鈥?鍏?绫?/div>
   </div>
   <div class="result-breakdown" id="breakdown">
-    <div class="empty-hint">璇峰～鍏ュ澂甯冧环鏍煎拰鑷冲皯涓€閬撴煋鏁村姞宸ヨ垂鍗冲彲寮€濮嬭绠?/div>
+    <div class="empty-hint">璇峰～鍏ュ澂甯冨叕鏂や环銆侀棬骞呫€佸厠閲嶅嵆鍙紑濮嬭绠?/div>
   </div>
 </div>
 
-<div class="footer">绾虹粐闈㈡枡鎶ヤ环璁＄畻鍣?&middot; 鏁版嵁浠呭湪鏈湴璁＄畻</div>
+<div class="footer">绾虹粐闈㈡枡鎶ヤ环璁＄畻鍣?/div>
 
 <script>
 (function(){
   var $ = function(id){ return document.getElementById(id); };
 
-  var currentUnit = '鍏?鍏枻';
-
-  var fabricPrice = $('fabricPrice');
+  var fabricPricePerKg = $('fabricPricePerKg');
+  var fabricWidth = $('fabricWidth');
+  var fabricWeight = $('fabricWeight');
   var lossRate = $('lossRate');
   var managementFee = $('managementFee');
   var shippingFee = $('shippingFee');
+  var otherFee = $('otherFee');
   var taxRate = $('taxRate');
   var profitRate = $('profitRate');
   var processList = $('processList');
   var breakdown = $('breakdown');
-  var finalPrice = $('finalPrice');
-
-  $('unitToggle').addEventListener('click', function(e){
-    var btn = e.target.closest('button');
-    if (!btn) return;
-    var unit = btn.dataset.unit;
-    if (unit === currentUnit) return;
-    currentUnit = unit;
-    this.querySelectorAll('button').forEach(function(b){ b.classList.remove('active'); });
-    btn.classList.add('active');
-    updateUnitLabels();
-    recompute();
-  });
-
-  function updateUnitLabels(){
-    var labels = document.querySelectorAll('[data-unit-label]');
-    for (var i = 0; i < labels.length; i++) { labels[i].textContent = currentUnit; }
-    var placeholders = document.querySelectorAll('[data-unit-placeholder]');
-    for (var j = 0; j < placeholders.length; j++) { placeholders[j].placeholder = currentUnit; }
-    var unitSpan = finalPrice.querySelector('.unit');
-    if (unitSpan) unitSpan.textContent = currentUnit;
-  }
+  var finalPriceNoTax = $('finalPriceNoTax');
+  var finalPriceWithTax = $('finalPriceWithTax');
+  var meterPriceDisplay = $('meterPriceDisplay');
+  var meterPriceValue = $('meterPriceValue');
 
   function collectProcesses(){
     var items = processList.querySelectorAll('.process-item');
@@ -467,62 +451,84 @@
   }
 
   function recompute(){
-    var p = parseFloat(fabricPrice.value);
-    var l = parseFloat(lossRate.value) || 0;
-    var m = parseFloat(managementFee.value) || 0;
-    var s = parseFloat(shippingFee.value) || 0;
-    var t = parseFloat(taxRate.value) || 1;
-    var pr = parseFloat(profitRate.value) || 0;
+    var kgPrice = parseFloat(fabricPricePerKg.value);
+    var width = parseFloat(fabricWidth.value);
+    var weight = parseFloat(fabricWeight.value);
+    var loss = parseFloat(lossRate.value) || 0;
+    var mgmt = parseFloat(managementFee.value) || 0;
+    var ship = parseFloat(shippingFee.value) || 0;
+    var other = parseFloat(otherFee.value) || 0;
+    var tax = parseFloat(taxRate.value) || 1;
+    var profit = parseFloat(profitRate.value) || 0;
 
     var processes = collectProcesses();
     var processTotal = 0;
     for (var i = 0; i < processes.length; i++) { processTotal += processes[i].price; }
 
-    var hasBase = !isNaN(p) && (processTotal > 0 || processes.length > 0);
+    // 鍏枻浠?鈫?绫充环
+    var meterPrice = null;
+    if (!isNaN(kgPrice) && !isNaN(width) && !isNaN(weight) && width > 0) {
+      var kgPerMeter = width * weight / 1000;
+      meterPrice = kgPrice * kgPerMeter;
+      meterPriceValue.textContent = formatMoney(meterPrice);
+      meterPriceDisplay.classList.add('visible');
+    } else {
+      meterPriceDisplay.classList.remove('visible');
+    }
+
+    var hasBase = meterPrice !== null && meterPrice > 0;
 
     if (!hasBase) {
-      finalPrice.innerHTML = '鈥?<span class="unit">' + currentUnit + '</span>';
-      breakdown.innerHTML = '<div class="empty-hint">璇峰～鍏ュ澂甯冧环鏍煎拰鑷冲皯涓€閬撴煋鏁村姞宸ヨ垂鍗冲彲寮€濮嬭绠?/div>';
+      finalPriceNoTax.textContent = '鈥?鍏?绫?;
+      finalPriceWithTax.textContent = '鍚◣浠凤細鈥?鍏?绫?;
+      breakdown.innerHTML = '<div class="empty-hint">璇峰～鍏ュ澂甯冨叕鏂や环銆侀棬骞呫€佸厠閲嶅嵆鍙紑濮嬭绠?/div>';
       return;
     }
 
-    var baseP = isNaN(p) ? 0 : p;
-    var step1 = processTotal;
-    var step2 = (baseP + step1) * (1 + l / 100);
-    var step3 = step2 + m;
-    var step4 = step3 + s;
-    var step5 = step4 * t;
-    var step6 = step5 * (1 + pr / 100);
+    // 鈶?鍧竷鎴愭湰 = 绫充环 梅 (1 - 鎹熻€楃巼/100)
+    var fabricCost = meterPrice / (1 - loss / 100);
 
-    finalPrice.innerHTML = formatMoney(step6) + ' <span class="unit">' + currentUnit + '</span>';
+    // 鈶?鏌撴暣鎴愭湰 = 鍧竷鎴愭湰 + 鍔犲伐璐瑰悎璁?    var dyeCost = fabricCost + processTotal;
 
-    var colors = ['#3d5a80','#5c7c99','#7a9bb5','#98b8d0','#b5d3e8','#d4eaf7'];
-    var u = currentUnit;
+    // 鈶?鍚鐞嗚垂 = 鏌撴暣鎴愭湰 + 杩愯惀绠＄悊璐?    var withMgmt = dyeCost + mgmt;
+
+    // 鈶?鍚繍璐?= 鍚鐞嗚垂 + 杩愯垂 + 鍏朵粬璐圭敤
+    var withShipping = withMgmt + ship + other;
+
+    // 鈶?涓嶅惈绋庝环 = 鍚繍璐?梅 (1 - 鍒╂鼎鐜?100)
+    var priceNoTax = withShipping / (1 - profit / 100);
+
+    // 鈶?鍚◣浠?= 涓嶅惈绋庝环 脳 绋庣偣绯绘暟
+    var priceWithTax = priceNoTax * tax;
+
+    finalPriceNoTax.textContent = formatMoney(priceNoTax) + ' 鍏?绫?;
+    finalPriceWithTax.textContent = '鍚◣浠凤細' + formatMoney(priceWithTax) + ' 鍏?绫?;
+
+    var colors = ['#3d5a80','#5c7c99','#7a9bb5','#98b8d0','#b5d3e8','#d4eaf7','#c17a3e'];
     var html = '';
 
-    if (!isNaN(p)) {
-      html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[0] + '"></span>鍧竷浠锋牸</span><span class="breakdown-value">' + formatMoney(baseP) + ' ' + u + '</span></div>';
-    }
+    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[0] + '"></span>鍏枻浠?鈫?绫充环</span><span class="breakdown-value">' + formatMoney(meterPrice) + ' 鍏?绫?/span></div>';
+    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[0] + '"></span>鍧竷鎴愭湰 (鎹熻€? + loss + '%)</span><span class="breakdown-value">' + formatMoney(fabricCost) + ' 鍏?绫?/span></div>';
 
     if (processes.length > 0) {
       for (var k = 0; k < processes.length; k++) {
-        html += '<div class="breakdown-row"><span class="breakdown-label" style="padding-left:16px">鈹?' + processes[k].name + '</span><span class="breakdown-value">' + formatMoney(processes[k].price) + ' ' + u + '</span></div>';
+        html += '<div class="breakdown-row"><span class="breakdown-label" style="padding-left:16px">' + processes[k].name + '</span><span class="breakdown-value">' + formatMoney(processes[k].price) + ' 鍏?绫?/span></div>';
       }
-      html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[0] + '"></span>鍔犲伐璐瑰悎璁?/span><span class="breakdown-value">' + formatMoney(step1) + ' ' + u + '</span></div>';
+      html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[1] + '"></span>鍔犲伐璐瑰悎璁?/span><span class="breakdown-value">' + formatMoney(processTotal) + ' 鍏?绫?/span></div>';
     }
 
-    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[1] + '"></span>鏌撴暣鎴愭湰 (鍚? + l + '%鎹熻€?</span><span class="breakdown-value">' + formatMoney(step2) + ' ' + u + '</span></div>';
-    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[2] + '"></span>鍚鐞嗚垂</span><span class="breakdown-value">' + formatMoney(step3) + ' ' + u + '</span></div>';
+    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[1] + '"></span>鏌撴暣鎴愭湰</span><span class="breakdown-value">' + formatMoney(dyeCost) + ' 鍏?绫?/span></div>';
+    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[2] + '"></span>鍚鐞嗚垂</span><span class="breakdown-value">' + formatMoney(withMgmt) + ' 鍏?绫?/span></div>';
 
-    if (s > 0) {
-      html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[3] + '"></span>鍚繍璐?/span><span class="breakdown-value">' + formatMoney(step4) + ' ' + u + '</span></div>';
+    var shipLabel = '鍚繍璐?;
+    if (other > 0) shipLabel = '鍚繍璐?鍏朵粬';
+    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[3] + '"></span>' + shipLabel + '</span><span class="breakdown-value">' + formatMoney(withShipping) + ' 鍏?绫?/span></div>';
+
+    if (profit > 0) {
+      html += '<div class="breakdown-row highlight"><span class="breakdown-label"><span class="dot" style="background:' + colors[5] + '"></span>涓嶅惈绋庝环 (鍒╂鼎鐜?' + profit + '%)</span><span class="breakdown-value">' + formatMoney(priceNoTax) + ' 鍏?绫?/span></div>';
     }
 
-    html += '<div class="breakdown-row"><span class="breakdown-label"><span class="dot" style="background:' + colors[4] + '"></span>鍚◣浠?(脳' + t + ')</span><span class="breakdown-value">' + formatMoney(step5) + ' ' + u + '</span></div>';
-
-    if (pr > 0) {
-      html += '<div class="breakdown-row highlight"><span class="breakdown-label"><span class="dot" style="background:' + colors[5] + '"></span>鍚埄娑?(' + pr + '%)</span><span class="breakdown-value">' + formatMoney(step6) + ' ' + u + '</span></div>';
-    }
+    html += '<div class="breakdown-row final"><span class="breakdown-label"><span class="dot" style="background:' + colors[6] + '"></span>鍚◣浠?(脳' + tax + ')</span><span class="breakdown-value">' + formatMoney(priceWithTax) + ' 鍏?绫?/span></div>';
 
     breakdown.innerHTML = html;
   }
@@ -534,7 +540,7 @@
     div.className = 'process-item';
     div.innerHTML =
       '<span class="proc-num">宸ュ簭' + idx + '</span>' +
-      '<input type="number" class="proc-price" placeholder="' + currentUnit + '" step="0.01" min="0" data-unit-placeholder>' +
+      '<input type="number" class="proc-price" placeholder="鍏?绫? step="0.01" min="0">' +
       '<button class="btn-remove" title="鍒犻櫎" onclick="removeProcess(this)">&times;</button>';
     processList.appendChild(div);
     bindInputs(div);
@@ -568,7 +574,7 @@
     }
   }
 
-  var fixedInputs = [fabricPrice, lossRate, managementFee, shippingFee, taxRate, profitRate];
+  var fixedInputs = [fabricPricePerKg, fabricWidth, fabricWeight, lossRate, managementFee, shippingFee, otherFee, taxRate, profitRate];
   for (var i = 0; i < fixedInputs.length; i++) {
     fixedInputs[i].addEventListener('input', recompute);
   }
